@@ -2,7 +2,6 @@
 """
 Weather Forecast MCP Server
 Uses Open-Meteo API — free, no API key required.
-Runs with SSE transport (HTTP) inside Docker on port 8000.
 """
 
 import json
@@ -10,7 +9,7 @@ import urllib.request
 import urllib.parse
 from mcp.server.fastmcp import FastMCP
 
-mcp = FastMCP("Weather Forecast")
+mcp = FastMCP("Weather Forecast", host="0.0.0.0", port=8000)
 
 # ──────────────────────────────────────────────
 # Helpers
@@ -22,7 +21,6 @@ def _fetch(url: str) -> dict:
 
 
 def _geocode(city: str) -> tuple[float, float, str]:
-    """Return (latitude, longitude, resolved_name) for a city name."""
     params = urllib.parse.urlencode({"name": city, "count": 1, "language": "en", "format": "json"})
     data = _fetch(f"https://geocoding-api.open-meteo.com/v1/search?{params}")
     if not data.get("results"):
